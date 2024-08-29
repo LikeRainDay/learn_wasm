@@ -1,25 +1,29 @@
 [package]
-name = "wasm-example"
-description="wasm example with easy access"
-repository = "https://github.com/marpme/wasm-example"
-license = "Apache-2.0"
+name = "wasm-learn"
 version = "0.1.0"
-authors = ["marpme <7430964+marpme@users.noreply.github.com>"]
-edition = "2018"
+authors = ["Rainy"]
+edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
 
-[dependencies]
-wasm-bindgen = "0.2"
+[features]
+default = ["console_error_panic_hook"]
 
-[dependencies.web-sys]
-version = "0.3"
-features = ["Window", "console", "Document", "Element", "HtmlBodyElement"]
+[dependencies]
+wasm-bindgen = "0.2.93"
+aes = "0.8.4"
+block-modes = "0.9.1"
+hex = "0.4"
+
+# The `console_error_panic_hook` crate provides better debugging of panics by
+# logging them with `console.error`. This is great for development, but requires
+# all the `std::fmt` and `std::panicking` infrastructure, so isn't great for
+# code size when deploying.
+console_error_panic_hook = { version = "0.1.7", optional = true }
 
 [dev-dependencies]
-wasm-bindgen-test = "0.3.34"
-cargo-watch = "8.4"
+wasm-bindgen-test = "0.3.42"
 
 [profile.release]
 # Tell `rustc` to optimize for small code size.

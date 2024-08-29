@@ -1,29 +1,20 @@
-mod utils;
-
-use std::ops::Deref;
+use aes::cipher::generic_array::GenericArray;
+use aes::cipher::{BlockEncrypt, KeyInit};
+use aes::Aes128;
 use wasm_bindgen::prelude::*;
-use web_sys::{window, console};
 
 #[wasm_bindgen]
-pub fn greet() {
-    console::log_1(&JsValue::from("Hello World!"))
+pub fn general_request_id(time_stamp: u32) -> String {
+    let key_bytes = b"SGi8#jsoigai10s2";
+    let key = GenericArray::from_slice(&key_bytes[..16]);
+    let cipher = Aes128::new(&key);
+    let raw_data = time_stamp.to_be_bytes();
+    let mut convert_block = [0u8; 16];
+    convert_block[..4].copy_from_slice(&raw_data);
+    let content_block = GenericArray::from_mut_slice(&mut convert_block);
+    cipher.encrypt_block(content_block);
+    hex::encode(content_block)
 }
 
-#[wasm_bindgen]
-pub fn init() {
-    console::time();
-
-    let window = window().unwrap();
-    let document = window.document().unwrap();
-    let body = document.body().unwrap();
-
-    for _ in 0..100000 {
-        let div_element = document.create_element("div").unwrap();
-
-        div_element.set_text_content(Option::from("Hello World"));
-        body.append_child(div_element.deref()).expect("Hello World div wasn't appended");
-    }
 
 
-    console::time_end();
-}
